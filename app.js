@@ -1,7 +1,9 @@
-const rat = document.querySelector('#rat');
+const ratMesh = document.querySelector('#ratMesh');
+const ratBox = document.querySelector('#ratBox');
 const controller = document.querySelector('#controller');
-const btnRed = document.querySelector('.btn1');
-const btnGreen = document.querySelector('.btn2');
+const y = document.querySelector('#y');
+const u = document.querySelector('#u');
+const d = document.querySelector('#d');
 
 let KeyUp = false; 
 let KeyDown = false;
@@ -13,21 +15,23 @@ let speedX = 0;
 let speedY = 0;
 
 window.addEventListener('load', () => {
-    rat.style.position = 'absolute';
-    rat.style.left = 0;
-    rat.style.top = 0;
+    ratMesh.src = './imgs/static-rat.png'
+    ratBox.style.position = 'absolute';
+    ratBox.style.left = 0;
+    ratBox.style.top = 0;
 })
+
 //key check
 window.addEventListener('keydown', (e) => {
-    rat.style.backgroundImage = 'url(./imgs/ratrun.gif)';
+    ratMesh.src = "./imgs/h-run.gif"
     switch(e.key){
         case 'a':
         KeyLeft = true;
-        rat.style.transform = 'scaleX(-1)'
+        ratBox.style.transform = 'scaleX(-1)'
         break;
         case 'd':
         KeyRight = true;
-        rat.style.transform = 'scaleX(1)'
+        ratBox.style.transform = 'scaleX(1)'
         break;
         case 'w':
         KeyUp = true;
@@ -40,8 +44,8 @@ window.addEventListener('keydown', (e) => {
 
 //game loop
 setInterval(function GameTicks(){
-    rat.style.left = parseInt(rat.style.left) + speedX + 'px';
-    rat.style.top = parseInt(rat.style.top) + speedY + 'px';
+    ratBox.style.left = parseInt(ratBox.style.left) + speedX + 'px';
+    ratBox.style.top = parseInt(ratBox.style.top) + speedY + 'px';
 
     if(KeyRight){
         speedX += .2;
@@ -53,15 +57,14 @@ setInterval(function GameTicks(){
         speedY += .2;
     }
 
-    const ratBox = rat.getBoundingClientRect();
-    const btnRedBox = btnRed.getBoundingClientRect();
 
-    checkCollisions(ratBox, btnRedBox);
+
+    checkCollisions();
 }, 10)
 
 //keyup reset
 window.addEventListener('keyup', () => {
-    rat.style.backgroundImage = 'url(./imgs/0009.png)';
+    ratMesh.src = './imgs/static-rat.png'
     speedY = 0;
     speedX = 0;
     KeyUp = false; 
@@ -71,21 +74,31 @@ window.addEventListener('keyup', () => {
 })
 
 //collisions
-function checkCollisions(active, passive){
-    let xc;
-    let yc;
-    if(active.right >= passive.left && active.right <= passive.right || active.left >= passive.left && active.left <= passive.right){
-        //console.log('horizontal collisions!');
-        xc = true;
+function checkCollisions(){
+    const ratHitBox = ratBox.getBoundingClientRect();
+    const yBox = y.getBoundingClientRect();
+    const uBox = u.getBoundingClientRect();
+    const dBox = d.getBoundingClientRect();
+    
+    //down
+    let dX = ratHitBox.right >= dBox.left && ratHitBox.right <= dBox.right || ratHitBox.left >= dBox.left && ratHitBox.left <= dBox.right;
+    let dY = ratHitBox.top >= dBox.top && ratHitBox.top <= dBox.bottom || ratHitBox.bottom >= dBox.top && ratHitBox.bottom <= dBox.bottom;
+    //up
+    let uX = ratHitBox.right >= uBox.left && ratHitBox.right <= uBox.right || ratHitBox.left >= uBox.left && ratHitBox.left <= uBox.right;
+    let uY = ratHitBox.top >= uBox.top && ratHitBox.top <= uBox.bottom || ratHitBox.bottom >= uBox.top && ratHitBox.bottom <= uBox.bottom;
+    //y
+    let yX = ratHitBox.right >= yBox.left && ratHitBox.right <= yBox.right || ratHitBox.left >= yBox.left && ratHitBox.left <= yBox.right;
+    let yY = ratHitBox.top >= yBox.top && ratHitBox.top <= yBox.bottom || ratHitBox.bottom >= yBox.top && ratHitBox.bottom <= yBox.bottom;
+    
+    if(uX && uY){
+        controller.style.backgroundImage = 'url(./imgs/u-pressed.png)';
+    } else if (dX && dY){
+        controller.style.backgroundImage = 'url(./imgs/d-pressed.png)';
+    } else if (yX && yY){
+        controller.style.backgroundImage = 'url(./imgs/y-pressed.png)';
+    } else {
+        controller.style.backgroundImage = 'url(./imgs/controller.png)';
     }
-    if(active.top >= passive.top && active.top <= passive.bottom || active.bottom >= passive.top && active.bottom <= passive.bottom){
-        //console.log('vertical collisions!');
-        yc = true;
-    }
-    if(xc && yc){
-        console.log('collisions!')
-    }
-
 }
 
 
