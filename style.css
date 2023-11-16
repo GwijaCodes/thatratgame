@@ -6,7 +6,7 @@
 body{
     width: 100vw;
     height: 100vh;
-    background-color: #3e3e3e;
+    background-color: #1b1b1b;
     display: grid;
     place-content: center;
     perspective: 1500px;
@@ -54,7 +54,7 @@ body{
         justify-content: center;
         gap: 230px;
         align-items: center;
-        margin-top: 30px;
+        margin-top: 32px;
     }
 
     .button{
@@ -63,7 +63,7 @@ body{
 
     #y{
         width: 70px;
-        height: 60px;
+        height: 40px;
     }
 
     #u, #d{
@@ -72,7 +72,7 @@ body{
     }
 
     #u{
-        margin-left: 5px;
+        margin-left: 8px;
     }
 
     .pressed{
@@ -83,5 +83,11 @@ body{
     .arrows{
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
+
+.screen{
+    display: grid;
+    place-content: center;
+    font-family: sans-serif;
+}

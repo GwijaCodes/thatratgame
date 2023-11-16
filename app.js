@@ -1,6 +1,8 @@
 const ratMesh = document.querySelector('#ratMesh');
 const ratBox = document.querySelector('#ratBox');
 const controller = document.querySelector('#controller');
+const screen = document.querySelector('.screen');
+const h1 = document.querySelector('h1');
 const y = document.querySelector('#y');
 const u = document.querySelector('#u');
 const d = document.querySelector('#d');
@@ -17,8 +19,8 @@ let speedY = 0;
 window.addEventListener('load', () => {
     ratMesh.src = './imgs/static-rat.png'
     ratBox.style.position = 'absolute';
-    ratBox.style.left = 0;
-    ratBox.style.top = 0;
+    ratBox.style.left = 480 + 'px';
+    ratBox.style.top = 480 + 'px';
 })
 
 //key check
@@ -57,9 +59,9 @@ setInterval(function GameTicks(){
         speedY += .2;
     }
 
-
-
     checkCollisions();
+
+    h1.innerText = inputs;
 }, 10)
 
 //keyup reset
@@ -74,6 +76,7 @@ window.addEventListener('keyup', () => {
 })
 
 //collisions
+let inputs = ['u', 'd', 'y'];
 function checkCollisions(){
     const ratHitBox = ratBox.getBoundingClientRect();
     const yBox = y.getBoundingClientRect();
@@ -92,14 +95,32 @@ function checkCollisions(){
     
     if(uX && uY){
         controller.style.backgroundImage = 'url(./imgs/u-pressed.png)';
+        inputs[0] = true;
+        inputs[1] = 'd';
     } else if (dX && dY){
         controller.style.backgroundImage = 'url(./imgs/d-pressed.png)';
+        inputs[1] = true;
+        inputs[0] = 'u';
     } else if (yX && yY){
         controller.style.backgroundImage = 'url(./imgs/y-pressed.png)';
+        inputs[2] = true;
     } else {
         controller.style.backgroundImage = 'url(./imgs/controller.png)';
+        inputs = ['u', 'd', 'y'];
+    }
+
+    
+    if(inputs[0] == true){
+        screen.style.backgroundColor = 'green'
+    } else if (inputs[1] == true){
+        screen.style.backgroundColor = 'blue'
+    } else if (inputs[2] == true){
+        screen.style.backgroundColor = 'yellow'
+    } else {
+        screen.style.backgroundColor = 'white'
     }
 }
+
 
 
 
