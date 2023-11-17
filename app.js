@@ -12,6 +12,9 @@ let KeyDown = false;
 let KeyLeft = false;
 let KeyRight = false;
 
+let randChoice = 0;
+let anyBtnPressed = false;
+
 //movement controls
 let speedX = 0;
 let speedY = 0;
@@ -21,6 +24,7 @@ window.addEventListener('load', () => {
     ratBox.style.position = 'absolute';
     ratBox.style.left = 480 + 'px';
     ratBox.style.top = 480 + 'px';
+    game();
 })
 
 //key check
@@ -60,8 +64,12 @@ setInterval(function GameTicks(){
     }
 
     checkCollisions();
-
-    h1.innerText = inputs;
+    //console.log(anyBtnPressed)
+    if(inputs[0] == true || inputs[1] == true || inputs[2] == true){
+        anyBtnPressed = true;
+    } else {
+        anyBtnPressed = false;
+    }
 }, 10)
 
 //keyup reset
@@ -73,6 +81,11 @@ window.addEventListener('keyup', () => {
     KeyDown = false;
     KeyLeft = false;
     KeyRight = false;
+
+    if(anyBtnPressed){
+        console.log('new instruction')
+        game()
+    }
 })
 
 //collisions
@@ -108,22 +121,35 @@ function checkCollisions(){
         controller.style.backgroundImage = 'url(./imgs/controller.png)';
         inputs = ['u', 'd', 'y'];
     }
+}
 
-    
-    if(inputs[0] == true){
-        screen.style.backgroundColor = 'green'
-    } else if (inputs[1] == true){
-        screen.style.backgroundColor = 'blue'
-    } else if (inputs[2] == true){
-        screen.style.backgroundColor = 'yellow'
-    } else {
+function game(){
+    let myPress = inputs.findIndex(isTrue);
+    function isTrue(btn){
+        return btn == true;
+    }
+    setTimeout(function getOff(){
         screen.style.backgroundColor = 'white'
+        randChoice = Math.floor(Math.random() * 3);
+        let choices = ['Press Up', 'Press Down', 'Press Yellow']
+        h1.innerHTML = choices[randChoice];
+    }, 1000)
+
+    if(anyBtnPressed){
+        console.log(myPress)
+        if(myPress === randChoice){
+            screen.style.backgroundColor = 'green'
+            console.log('match!')
+        } else if (myPress != randChoice) {
+            console.log('unmatched')
+            gameOver()
+        }
     }
 }
 
-
-
-
-
-
-
+function gameOver(){
+    screen.style.backgroundColor = 'red'
+    ratBox.style.left = 480 + 'px';
+    ratBox.style.top = 480 + 'px';
+    h1.innerHTML = 'Press any key to start'
+}
