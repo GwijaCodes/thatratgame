@@ -2,6 +2,7 @@ const ratMesh = document.querySelector('#ratMesh');
 const ratBox = document.querySelector('#ratBox');
 const controller = document.querySelector('#controller');
 const screen = document.querySelector('.screen');
+const scoreDisplay = document.querySelector('#score');
 const h1 = document.querySelector('h1');
 const y = document.querySelector('#y');
 const u = document.querySelector('#u');
@@ -14,6 +15,7 @@ let KeyRight = false;
 
 let randChoice = 0;
 let anyBtnPressed = false;
+let score;
 
 //movement controls
 let speedX = 0;
@@ -24,6 +26,7 @@ window.addEventListener('load', () => {
     ratBox.style.position = 'absolute';
     ratBox.style.left = 480 + 'px';
     ratBox.style.top = 480 + 'px';
+    score = 0;
     game();
 })
 
@@ -54,13 +57,13 @@ setInterval(function GameTicks(){
     ratBox.style.top = parseInt(ratBox.style.top) + speedY + 'px';
 
     if(KeyRight){
-        speedX += .2;
+        speedX += .6;
     } else if (KeyLeft){
-        speedX -= .2;
+        speedX -= .6;
     } else if (KeyUp){
-        speedY -= .2;
+        speedY -= .6;
     } else if (KeyDown){
-        speedY += .2;
+        speedY += .6;
     }
 
     checkCollisions();
@@ -70,6 +73,8 @@ setInterval(function GameTicks(){
     } else {
         anyBtnPressed = false;
     }
+
+    scoreDisplay.innerHTML = `Score: ${score}`
 }, 10)
 
 //keyup reset
@@ -133,6 +138,7 @@ function game(){
         randChoice = Math.floor(Math.random() * 3);
         let choices = ['Press Up', 'Press Down', 'Press Yellow']
         h1.innerHTML = choices[randChoice];
+        score++;
     }, 1000)
 
     if(anyBtnPressed){
@@ -148,6 +154,7 @@ function game(){
 }
 
 function gameOver(){
+    score = 0;
     screen.style.backgroundColor = 'red'
     ratBox.style.left = 480 + 'px';
     ratBox.style.top = 480 + 'px';

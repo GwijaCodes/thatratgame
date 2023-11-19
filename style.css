@@ -91,3 +91,9 @@ body{
     place-content: center;
     font-family: sans-serif;
 }
+
+h2{
+    font-family: sans-serif;
+    color: white;
+    font-size: 15px;
+}
