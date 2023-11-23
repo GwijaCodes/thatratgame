@@ -15,23 +15,42 @@ let KeyRight = false;
 
 let randChoice = 0;
 let anyBtnPressed = false;
+let disableU = false;
+let disableD = false;
+let disableY = false;
 let score;
 
 //movement controls
 let speedX = 0;
 let speedY = 0;
 
+let hasTouchScreen = false;
+
+if ("maxTouchPoints" in navigator) {
+    hasTouchScreen = navigator.maxTouchPoints > 0;
+} 
+
+if (hasTouchScreen) {
+    screen.style.backgroundColor = 'orange'
+}
+
 window.addEventListener('load', () => {
-    ratMesh.src = './imgs/static-rat.png'
-    ratBox.style.position = 'absolute';
-    ratBox.style.left = 480 + 'px';
-    ratBox.style.top = 480 + 'px';
+    ratMesh.src = './imgs/static-rat.png';
+    controller.style.width = 600 + 'px';
+    controller.style.position = 'absolute';
+    controller.style.left = window.innerWidth / 2 + 'px';
     score = 0;
     game();
+    if(window.innerWidth <= 500){
+    controller.style.top = window.innerHeight / 2 + 'px';
+    } else {
+        controller.style.top = window.innerHeight / 2 + window.innerHeight / 4 + 'px';
+    }
 })
 
 //key check
 window.addEventListener('keydown', (e) => {
+    console.log('keydown')
     ratMesh.src = "./imgs/h-run.gif"
     switch(e.key){
         case 'a':
@@ -53,25 +72,24 @@ window.addEventListener('keydown', (e) => {
 
 //game loop
 setInterval(function GameTicks(){
-    ratBox.style.left = parseInt(ratBox.style.left) + speedX + 'px';
-    ratBox.style.top = parseInt(ratBox.style.top) + speedY + 'px';
+    controller.style.left = parseInt(controller.style.left) + speedX + 'px';
+    controller.style.top = parseInt(controller.style.top) + speedY + 'px';
 
     if(KeyRight){
-        speedX += .6;
-    } else if (KeyLeft){
         speedX -= .6;
+    } else if (KeyLeft){
+        speedX += .6;
     } else if (KeyUp){
-        speedY -= .6;
-    } else if (KeyDown){
         speedY += .6;
+    } else if (KeyDown){
+        speedY -= .6;
     }
 
     checkCollisions();
-    //console.log(anyBtnPressed)
-    if(inputs[0] == true || inputs[1] == true || inputs[2] == true){
-        anyBtnPressed = true;
-    } else {
-        anyBtnPressed = false;
+    
+    //pseudo gravity
+    if(parseInt(controller.style.left) > window.innerWidth / 2 + 300 || parseInt(controller.style.left) < window.innerWidth / 2 - 300){
+        gameOver()
     }
 
     scoreDisplay.innerHTML = `Score: ${score}`
@@ -87,8 +105,12 @@ window.addEventListener('keyup', () => {
     KeyLeft = false;
     KeyRight = false;
 
+    if(inputs[0] == true || inputs[1] == true || inputs[2] == true){
+        anyBtnPressed = true;
+    } else {
+        anyBtnPressed = false;
+    }
     if(anyBtnPressed){
-        console.log('new instruction')
         game()
     }
 })
@@ -111,52 +133,84 @@ function checkCollisions(){
     let yX = ratHitBox.right >= yBox.left && ratHitBox.right <= yBox.right || ratHitBox.left >= yBox.left && ratHitBox.left <= yBox.right;
     let yY = ratHitBox.top >= yBox.top && ratHitBox.top <= yBox.bottom || ratHitBox.bottom >= yBox.top && ratHitBox.bottom <= yBox.bottom;
     
+
     if(uX && uY){
         controller.style.backgroundImage = 'url(./imgs/u-pressed.png)';
-        inputs[0] = true;
-        inputs[1] = 'd';
+        if(!disableU){
+            inputs[0] = true;
+            inputs[1] = 'd';
+            disableD = false;
+            disableY = false;
+            setTimeout(()=>{disableU = true; inputs = ['u', 'd', 'y'];}, 300);  
+        }
     } else if (dX && dY){
         controller.style.backgroundImage = 'url(./imgs/d-pressed.png)';
-        inputs[1] = true;
-        inputs[0] = 'u';
+        if(!disableD){
+            inputs[1] = true;
+            inputs[0] = 'u';
+            disableU = false;
+            disableY = false;
+            setTimeout(()=>{disableD = true; inputs = ['u', 'd', 'y'];}, 300);
+        }
     } else if (yX && yY){
         controller.style.backgroundImage = 'url(./imgs/y-pressed.png)';
-        inputs[2] = true;
+        if(!disableY){
+            inputs[2] = true;
+            disableU = false;
+            disableD = false;
+            setTimeout(()=>{disableY = true; inputs = ['u', 'd', 'y'];}, 300);
+        }
     } else {
         controller.style.backgroundImage = 'url(./imgs/controller.png)';
         inputs = ['u', 'd', 'y'];
+        disableU = false;
+        disableD = false;
+        disableY = false;
     }
 }
 
+//game mechanic
 function game(){
+    
+    console.log('game called!')
     let myPress = inputs.findIndex(isTrue);
     function isTrue(btn){
         return btn == true;
     }
-    setTimeout(function getOff(){
-        screen.style.backgroundColor = 'white'
-        randChoice = Math.floor(Math.random() * 3);
-        let choices = ['Press Up', 'Press Down', 'Press Yellow']
-        h1.innerHTML = choices[randChoice];
-        score++;
-    }, 1000)
-
+    //right or wrong button
     if(anyBtnPressed){
-        console.log(myPress)
-        if(myPress === randChoice){
+         if(myPress === randChoice){
             screen.style.backgroundColor = 'green'
-            console.log('match!')
+            score++;   
         } else if (myPress != randChoice) {
-            console.log('unmatched')
             gameOver()
         }
     }
+       
+    //new game
+    setTimeout(function getOff(){
+        screen.style.backgroundColor = '#4EA5AA'
+        randChoice = Math.floor(Math.random() * 3);
+        let choices = ['Press Up', 'Press Down', 'Press Yellow']
+        h1.innerHTML = choices[randChoice];
+    }, 500)
+    console.log(myPress)
+
 }
 
 function gameOver(){
+    console.log('gameover called!')
+    ratMesh.src = './imgs/dead.png'
+    h1.innerHTML = 'Whoops'
     score = 0;
-    screen.style.backgroundColor = 'red'
-    ratBox.style.left = 480 + 'px';
-    ratBox.style.top = 480 + 'px';
-    h1.innerHTML = 'Press any key to start'
-}
+    setTimeout(() => {  
+        ratMesh.src = './imgs/static-rat.png'
+        controller.style.left = window.innerWidth / 2 + 'px';
+        controller.style.top = window.innerHeight / 2 + window.innerHeight / 4 + 'px';
+        if(window.innerWidth < 400){
+            controller.style.top = window.innerHeight / 2 + 'px';
+            }
+        randChoice = -1;
+        game()
+        },500)
+    }

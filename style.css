@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
 }
+@font-face {
+    font-family: 'dogicapixel';
+    src: url('./imgs/dogicapixel.ttf');
+}
 
 body{
     width: 100vw;
@@ -10,17 +14,23 @@ body{
     display: grid;
     place-content: center;
     perspective: 1500px;
+    font-family: 'dogicapixel';
+    overflow: hidden;
 }
+
 
 .screen{
     width: 40vw;
     height: 40vh;
     position: absolute;
-    background-color: white;
-    border-radius: 40px;
+    border-radius: 50px;
+    background: #4EA5AA;
+    color: #57F5FF;
+    box-shadow: 0px 1px 30px 14px rgba(87, 245, 255, 0.30);
     left: 50%;
     top: 10%;
     translate: -50%;
+    
 }
 
 #ratMesh{
@@ -36,17 +46,18 @@ body{
        align-items: end;
        background-color: #0000001b;
        box-shadow: 0 5px 10px 5px #0000001b;
-       border: 1px solid #00000000;
+       margin-top: 200px;
+       z-index: 100;
    }
 
 #controller{
     width: 600px;
     height: 250px;
-    margin-top: 40vh;
     border-radius: 20px;
     background-image: url('./imgs/controller.png');
     background-size: cover;
     background-position: center;
+    transform: translate(-50%, -50%);
 }
 
     .buttons{
@@ -59,6 +70,11 @@ body{
 
     .button{
         border: 1px solid #00000000;
+        display: block;
+    }
+
+    .disable{
+        display: none;
     }
 
     #y{
@@ -89,11 +105,31 @@ body{
 .screen{
     display: grid;
     place-content: center;
-    font-family: sans-serif;
 }
 
 h2{
-    font-family: sans-serif;
     color: white;
     font-size: 15px;
+}
+
+#score{
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+
+@media(max-width: 500px){
+    .screen{
+        width: 80vw;
+        height: 20vh;
+        border-radius: 30px;
+    }
+
+    .screen h1{
+        font-size: 18px;
+    }
+
+    #score{
+        font-size: 12px;
+    }
 }
