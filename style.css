@@ -44,8 +44,6 @@ body{
        display: flex;
        justify-content: center;
        align-items: end;
-       background-color: #0000001b;
-       box-shadow: 0 5px 10px 5px #0000001b;
        margin-top: 200px;
        z-index: 100;
    }
@@ -71,10 +69,6 @@ body{
     .button{
         border: 1px solid #00000000;
         display: block;
-    }
-
-    .disable{
-        display: none;
     }
 
     #y{
@@ -105,10 +99,10 @@ body{
 .screen{
     display: grid;
     place-content: center;
+    overflow: hidden;
 }
 
 h2{
-    color: white;
     font-size: 15px;
 }
 
@@ -133,3 +127,4 @@ h2{
         font-size: 12px;
     }
 }
+

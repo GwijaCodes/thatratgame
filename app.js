@@ -2,6 +2,8 @@ const ratMesh = document.querySelector('#ratMesh');
 const ratBox = document.querySelector('#ratBox');
 const controller = document.querySelector('#controller');
 const screen = document.querySelector('.screen');
+const timeLeft = document.querySelector('#time-left');
+let timePerc = 1000;
 const scoreDisplay = document.querySelector('#score');
 const h1 = document.querySelector('h1');
 const y = document.querySelector('#y');
@@ -20,20 +22,10 @@ let disableD = false;
 let disableY = false;
 let score;
 
-//movement controls
 let speedX = 0;
 let speedY = 0;
 
-let hasTouchScreen = false;
-
-if ("maxTouchPoints" in navigator) {
-    hasTouchScreen = navigator.maxTouchPoints > 0;
-} 
-
-if (hasTouchScreen) {
-    screen.style.backgroundColor = 'orange'
-}
-
+//after loading
 window.addEventListener('load', () => {
     ratMesh.src = './imgs/static-rat.png';
     controller.style.width = 600 + 'px';
@@ -86,12 +78,12 @@ setInterval(function GameTicks(){
     }
 
     checkCollisions();
-    
+    timeBar();
+
     //pseudo gravity
     if(parseInt(controller.style.left) > window.innerWidth / 2 + 300 || parseInt(controller.style.left) < window.innerWidth / 2 - 300){
         gameOver()
     }
-
     scoreDisplay.innerHTML = `Score: ${score}`
 }, 10)
 
@@ -171,7 +163,6 @@ function checkCollisions(){
 
 //game mechanic
 function game(){
-    
     console.log('game called!')
     let myPress = inputs.findIndex(isTrue);
     function isTrue(btn){
@@ -182,6 +173,7 @@ function game(){
          if(myPress === randChoice){
             screen.style.backgroundColor = 'green'
             score++;   
+            timePerc = 1000;
         } else if (myPress != randChoice) {
             gameOver()
         }
@@ -194,14 +186,13 @@ function game(){
         let choices = ['Press Up', 'Press Down', 'Press Yellow']
         h1.innerHTML = choices[randChoice];
     }, 500)
-    console.log(myPress)
-
 }
 
 function gameOver(){
     console.log('gameover called!')
     ratMesh.src = './imgs/dead.png'
     h1.innerHTML = 'Whoops'
+    timeLeft.innerText = '100%'
     score = 0;
     setTimeout(() => {  
         ratMesh.src = './imgs/static-rat.png'
@@ -211,6 +202,16 @@ function gameOver(){
             controller.style.top = window.innerHeight / 2 + 'px';
             }
         randChoice = -1;
+        timePerc = 100;
         game()
         },500)
     }
+
+function timeBar(){
+    console.log('timebar called')
+    timeLeft.innerText = parseInt(timePerc / 10) + '%';
+    timePerc--
+    if(timePerc <= 0){
+        gameOver()
+    }
+}
