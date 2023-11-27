@@ -27,7 +27,6 @@ let speedY = 0;
 
 //after loading
 window.addEventListener('load', () => {
-    ratMesh.src = './imgs/static-rat.png';
     controller.style.width = 600 + 'px';
     controller.style.position = 'absolute';
     controller.style.left = window.innerWidth / 2 + 'px';
@@ -43,7 +42,8 @@ window.addEventListener('load', () => {
 //key check
 window.addEventListener('keydown', (e) => {
     console.log('keydown')
-    ratMesh.src = "./imgs/h-run.gif"
+    ratMesh.classList.add('run');
+    ratMesh.classList.remove('idle')
     switch(e.key){
         case 'a':
         KeyLeft = true;
@@ -78,7 +78,7 @@ setInterval(function GameTicks(){
     }
 
     checkCollisions();
-    timeBar();
+    //timeBar();
 
     //pseudo gravity
     if(parseInt(controller.style.left) > window.innerWidth / 2 + 300 || parseInt(controller.style.left) < window.innerWidth / 2 - 300){
@@ -89,7 +89,8 @@ setInterval(function GameTicks(){
 
 //keyup reset
 window.addEventListener('keyup', () => {
-    ratMesh.src = './imgs/static-rat.png'
+    ratMesh.classList.add('idle');
+    ratMesh.classList.remove('run');
     speedY = 0;
     speedX = 0;
     KeyUp = false; 
@@ -127,7 +128,7 @@ function checkCollisions(){
     
 
     if(uX && uY){
-        controller.style.backgroundImage = 'url(./imgs/u-pressed.png)';
+        controller.style.backgroundPositionX = '1800px';
         if(!disableU){
             inputs[0] = true;
             inputs[1] = 'd';
@@ -136,7 +137,7 @@ function checkCollisions(){
             setTimeout(()=>{disableU = true; inputs = ['u', 'd', 'y'];}, 300);  
         }
     } else if (dX && dY){
-        controller.style.backgroundImage = 'url(./imgs/d-pressed.png)';
+        controller.style.backgroundPositionX = '1200px';
         if(!disableD){
             inputs[1] = true;
             inputs[0] = 'u';
@@ -145,7 +146,7 @@ function checkCollisions(){
             setTimeout(()=>{disableD = true; inputs = ['u', 'd', 'y'];}, 300);
         }
     } else if (yX && yY){
-        controller.style.backgroundImage = 'url(./imgs/y-pressed.png)';
+        controller.style.backgroundPositionX = '600px';
         if(!disableY){
             inputs[2] = true;
             disableU = false;
@@ -153,7 +154,7 @@ function checkCollisions(){
             setTimeout(()=>{disableY = true; inputs = ['u', 'd', 'y'];}, 300);
         }
     } else {
-        controller.style.backgroundImage = 'url(./imgs/controller.png)';
+        controller.style.backgroundPositionX = '0px';
         inputs = ['u', 'd', 'y'];
         disableU = false;
         disableD = false;
@@ -183,19 +184,17 @@ function game(){
     setTimeout(function getOff(){
         screen.style.backgroundColor = '#4EA5AA'
         randChoice = Math.floor(Math.random() * 3);
-        let choices = ['Press Up', 'Press Down', 'Press Yellow']
+        let choices = ['Press Cross', 'Press Circle', 'Press Yellow']
         h1.innerHTML = choices[randChoice];
     }, 500)
 }
 
 function gameOver(){
     console.log('gameover called!')
-    ratMesh.src = './imgs/dead.png'
     h1.innerHTML = 'Whoops'
     timeLeft.innerText = '100%'
     score = 0;
     setTimeout(() => {  
-        ratMesh.src = './imgs/static-rat.png'
         controller.style.left = window.innerWidth / 2 + 'px';
         controller.style.top = window.innerHeight / 2 + window.innerHeight / 4 + 'px';
         if(window.innerWidth < 400){

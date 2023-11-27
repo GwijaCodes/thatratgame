@@ -35,7 +35,21 @@ body{
 
 #ratMesh{
     height: 80px;
+    min-width: 140px;
+    max-width: 140px;
     margin-right: 8px;
+    background-image: url('./imgs/rat-sheet.png'); 
+    background-position: -280px 80px;
+   }
+
+   .run{
+    animation: run .4s infinite;
+    animation-timing-function: steps(10, end);
+   }
+
+   .idle{
+    animation: idle .2s ease .4;
+    animation-timing-function: steps(3, end);
    }
    
    #ratBox{
@@ -49,41 +63,47 @@ body{
    }
 
 #controller{
+    border: 2px solid;
+    border-color: #00000000;
+    height: 291px;
+    left: 0;
+    position: fixed;
+    top: 0;
     width: 600px;
-    height: 250px;
-    border-radius: 20px;
     background-image: url('./imgs/controller.png');
     background-size: cover;
-    background-position: center;
     transform: translate(-50%, -50%);
 }
 
-    .buttons{
-        display: flex;
-        justify-content: center;
-        gap: 230px;
-        align-items: center;
-        margin-top: 32px;
-    }
-
-    .button{
-        border: 1px solid #00000000;
-        display: block;
-    }
-
-    #y{
-        width: 70px;
-        height: 40px;
-    }
-
-    #u, #d{
-        width: 50px;
-        height: 45px;
-    }
-
-    #u{
-        margin-left: 8px;
-    }
+#y {
+    border: 2px solid;
+    border-color: #00000000;
+    height: 61px;
+    left: 430px;
+    position: absolute;
+    top: 68px;
+    width: 76px;
+  }
+  
+  #u {
+    border: 2px solid;
+    border-color: #00000000;
+    height: 57px;
+    left: 78px;
+    position: absolute;
+    top: 34px;
+    width: 81px;
+  }
+  
+  #d {
+    border: 2px solid;
+    border-color: #00000000;
+    height: 52px;
+    left: 173px;
+    position: absolute;
+    top: 131px;
+    width: 55px;
+  }
 
     .pressed{
         box-shadow: none;
@@ -125,6 +145,26 @@ h2{
 
     #score{
         font-size: 12px;
+    }
+}
+
+@keyframes run{
+    from {
+        background-position: 1400px 0px;
+    }
+
+    to {
+        background-position: 0px 0px;
+    }
+}
+
+@keyframes idle{
+    from{
+        background-position: 0px 80px;
+    }
+
+    to{
+        background-position: -420px 80px;
     }
 }
 
