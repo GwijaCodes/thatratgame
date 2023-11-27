@@ -70,7 +70,7 @@ body{
     position: fixed;
     top: 0;
     width: 600px;
-    background-image: url('./imgs/controller.png');
+    background-image: url('./imgs/controller-sheet.png');
     background-size: cover;
     transform: translate(-50%, -50%);
 }
